@@ -168,7 +168,7 @@ class RL_Trainer(object):
             with open(load_initial_expertdata, 'rb') as expertdatafile:
                 expertdata = pickle.load(expertdatafile)
             return expertdata, 0, None
-        # TODO collect `batch_size` samples to be used for training
+        # DONE collect `batch_size` samples to be used for training
         # HINT1: use sample_trajectories from utils
         # HINT2: you want each of these collected rollouts to be of length self.params['ep_len']
         print("\nCollecting data to be used for training...")
@@ -179,7 +179,7 @@ class RL_Trainer(object):
         train_video_paths = None
         if self.log_video:
             print('\nCollecting train rollouts to be used for saving videos...')
-            ## TODO look in utils and implement sample_n_trajectories
+            ## DONE look in utils and implement sample_n_trajectories
             train_video_paths = utils.sample_n_trajectories(self.env, collect_policy, MAX_NVIDEO, MAX_VIDEO_LEN, True)
 
         return paths, envsteps_this_batch, train_video_paths
@@ -190,12 +190,12 @@ class RL_Trainer(object):
         all_logs = []
         for train_step in range(self.params['num_agent_train_steps_per_iter']):
 
-            # TODO sample some data from the data buffer
+            # DONE sample some data from the data buffer
             # HINT1: use the agent's sample function
             # HINT2: how much data = self.params['train_batch_size']
             ob_batch, ac_batch, re_batch, next_ob_batch, terminal_batch = self.agent.sample(self.params['train_batch_size'])
 
-            # TODO use the sampled data to train an agent
+            # DONE use the sampled data to train an agent
             # HINT: use the agent's train function
             # HINT: keep the agent's training log for debugging
             train_log = self.agent.train(ob_batch, ac_batch, re_batch, next_ob_batch, terminal_batch)
@@ -205,9 +205,11 @@ class RL_Trainer(object):
     def do_relabel_with_expert(self, expert_policy, paths):
         print("\nRelabelling collected observations with labels from an expert policy...")
 
-        # TODO relabel collected obsevations (from our policy) with labels from an expert policy
+        # DONE relabel collected obsevations (from our policy) with labels from an expert policy
         # HINT: query the policy (using the get_action function) with paths[i]["observation"]
-        # and replace paths[i]["action"] with these expert labels
+        # and replace paths[i]["action"] with these expert label
+        for i in range(len(paths)):
+            paths[i]["action"] = expert_policy.get_action(paths[i]["observation"])
 
         return paths
 
